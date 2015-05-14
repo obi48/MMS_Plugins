@@ -24,8 +24,8 @@ public class TestPlugin extends Plugin {
     public boolean start() {
         System.out.println("Plugin started");
 
-        Media m = new Media("http://tegos.kz/new/mp3_full/Eminem_feat_Rihanna_-_The_Monster.mp3");
-//        Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
+        //Media m = new Media("http://tegos.kz/new/mp3_full/Eminem_feat_Rihanna_-_The_Monster.mp3");
+        Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
 
         MediaPlayer mp = new MediaPlayer(m);
         pluginHost.setPlayer(mp);
@@ -42,21 +42,21 @@ public class TestPlugin extends Plugin {
 
     @Override
     public String getDeveloper() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "MMS";
     }
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return TestPlugin.class.getCanonicalName();
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Test";
     }
 
     @Override
     public String getVersion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "1.0";
     }
 }
