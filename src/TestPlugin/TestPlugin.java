@@ -5,10 +5,16 @@
  */
 package TestPlugin;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import mms.Pluginsystem.Plugin;
 import mms.Pluginsystem.PluginHost;
+import mms.Pluginsystem.PluginHost.Identifier;
 
 /**
  *
@@ -31,6 +37,22 @@ public class TestPlugin extends Plugin {
         pluginHost.setPlayer(mp);
         mp.play();
 
+        //Register this plugin as listener on ControlPlugin
+        pluginHost.registerPluginListener(this, Identifier.ControlPlugin());
+        
+        //Register this plugin as listener on MenuPlugin
+        pluginHost.registerPluginListener(this, Identifier.MenuPlugin());
+        
+        //Register this plugin as listener on arbitrary Plugin
+        //pluginHost.registerPluginListener(this, Identifier.Plugin("DevName,PluginName,1.0"));
+        
+        try {
+            Pane root = (Pane) FXMLLoader.load(getClass().getClassLoader().getResource("TestPlugin/GUI/FXML.fxml"));
+            pluginHost.addToUIStack(root);
+        } catch (IOException ex) {
+            Logger.getLogger(TestPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return true;
     }
 
@@ -58,5 +80,15 @@ public class TestPlugin extends Plugin {
     @Override
     public String getVersion() {
         return "1.0";
+    }  
+
+    @Override
+    public void onEventReceived(String eventID, Object... args) {
+        //Ask developer of listened plugin for MessageIDs and possible arguments
+        switch(eventID){
+            case "message1": { 
+                System.out.println("bla");
+            }
+        }
     }
 }
