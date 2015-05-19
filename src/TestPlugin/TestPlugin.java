@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -30,8 +32,8 @@ public class TestPlugin extends Plugin {
     public boolean start() {
         System.out.println("Plugin started");
 
-        //Media m = new Media("http://tegos.kz/new/mp3_full/Eminem_feat_Rihanna_-_The_Monster.mp3");
-        Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
+        Media m = new Media("http://tegos.kz/new/mp3_full/Eminem_feat_Rihanna_-_The_Monster.mp3");
+        //Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
 
         MediaPlayer mp = new MediaPlayer(m);
         pluginHost.setPlayer(mp);
@@ -45,6 +47,11 @@ public class TestPlugin extends Plugin {
         
         //Register this plugin as listener on arbitrary Plugin
         //pluginHost.registerPluginListener(this, Identifier.Plugin("DevName,PluginName,1.0"));
+        
+        //Add a new Menu
+        Menu testMenu = new Menu("TestPluginMenu");
+        testMenu.getItems().add(new MenuItem("test"));
+        pluginHost.getMenus().add(testMenu);
         
         try {
             Pane root = (Pane) FXMLLoader.load(getClass().getClassLoader().getResource("TestPlugin/GUI/FXML.fxml"));
