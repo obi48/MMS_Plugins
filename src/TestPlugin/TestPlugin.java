@@ -8,13 +8,13 @@ package TestPlugin;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import mms.Pluginsystem.Plugin;
-import mms.Pluginsystem.PluginHost;
-import mms.Pluginsystem.PluginHost.Identifier;
+import mms.Pluginsystem.Impl.PluginHost;
 
 /**
  *
@@ -34,21 +34,21 @@ public class TestPlugin extends Plugin {
         Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
 
         MediaPlayer mp = new MediaPlayer(m);
-        pluginHost.setPlayer(mp);
+        host.setPlayer(mp);
         mp.play();
 
         //Register this plugin as listener on ControlPlugin
-        pluginHost.registerPluginListener(this, Identifier.ControlPlugin());
+        host.registerPluginListener(this, Identifier.ControlPlugin());
         
         //Register this plugin as listener on MenuPlugin
-        pluginHost.registerPluginListener(this, Identifier.MenuPlugin());
+        host.registerPluginListener(this, Identifier.MenuPlugin());
         
         //Register this plugin as listener on arbitrary Plugin
         //pluginHost.registerPluginListener(this, Identifier.Plugin("DevName,PluginName,1.0"));
         
         try {
             Pane root = (Pane) FXMLLoader.load(getClass().getClassLoader().getResource("TestPlugin/GUI/FXML.fxml"));
-            pluginHost.addToUIStack(root);
+            host.addToUIStack(root);
         } catch (IOException ex) {
             Logger.getLogger(TestPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
