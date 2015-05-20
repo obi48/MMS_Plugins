@@ -32,8 +32,8 @@ public class TestPlugin extends Plugin {
     public boolean start() {
         System.out.println("Plugin started");
 
-        Media m = new Media("http://tegos.kz/new/mp3_full/Eminem_feat_Rihanna_-_The_Monster.mp3");
-        //Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
+        //Media m = new Media("http://tegos.kz/new/mp3_full/Eminem_feat_Rihanna_-_The_Monster.mp3");
+        Media m = new Media("http://download.oracle.com/otndocs/products/javafx/oow2010-2.flv");
 
         MediaPlayer mp = new MediaPlayer(m);
         pluginHost.setPlayer(mp);
@@ -49,16 +49,16 @@ public class TestPlugin extends Plugin {
         //pluginHost.registerPluginListener(this, Identifier.Plugin("DevName,PluginName,1.0"));
         
         //Add a new Menu
-        Menu testMenu = new Menu("TestPluginMenu");
-        testMenu.getItems().add(new MenuItem("test"));
-        pluginHost.getMenus().add(testMenu);
-        
-        try {
-            Pane root = (Pane) FXMLLoader.load(getClass().getClassLoader().getResource("TestPlugin/GUI/FXML.fxml"));
-            pluginHost.addToUIStack(root);
-        } catch (IOException ex) {
-            Logger.getLogger(TestPlugin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        Menu testMenu = new Menu("TestPluginMenu");
+//        testMenu.getItems().add(new MenuItem("test"));
+//        pluginHost.getMenus().add(testMenu);
+//        
+//        try {
+//            Pane root = (Pane) FXMLLoader.load(getClass().getClassLoader().getResource("TestPlugin/GUI/FXML.fxml"));
+//            pluginHost.addToUIStack(root);
+//        } catch (IOException ex) {
+//            Logger.getLogger(TestPlugin.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         return true;
     }
