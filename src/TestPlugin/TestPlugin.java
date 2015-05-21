@@ -71,7 +71,7 @@ public class TestPlugin extends Plugin {
 
     @Override
     public String getDeveloper() {
-        return "MMS";
+        return "AOPP Studios";
     }
 
     @Override
