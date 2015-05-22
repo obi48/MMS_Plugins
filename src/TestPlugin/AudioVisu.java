@@ -5,6 +5,10 @@
  */
 package TestPlugin;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.effect.Reflection;
@@ -140,16 +144,26 @@ public class AudioVisu extends Plugin {
 		PANE.getChildren().removeAll(PANE.getChildren());
 		
 		mp = player;
-		//if(mp.isAudio()){
-		bandCount = mp.getAudioSpectrumNumBands();
-		minValue = mp.getAudioSpectrumThreshold();
-		mp.setAudioSpectrumListener(listener);
-		System.out.println(bandCount);
-		bars = new SpectrumBar[7];
-		norms = new double[bars.length];
-		counts = new int[bars.length];
-		init();
-		//}
+		
+		List<String> list = new LinkedList<>();
+		
+		list.add(".mp3");
+		list.add(".aif");
+		list.add(".aiff");
+		list.add(".wav");
+		
+		for(String s : list){
+			if(mp.getMedia().getSource().endsWith(s)){
+				bandCount = mp.getAudioSpectrumNumBands();
+				minValue = mp.getAudioSpectrumThreshold();
+				mp.setAudioSpectrumListener(listener);
+				System.out.println(bandCount);
+				bars = new SpectrumBar[7];
+				norms = new double[bars.length];
+				counts = new int[bars.length];
+				init();
+			}
+		}
 	}
 
 	@Override
