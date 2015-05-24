@@ -155,7 +155,7 @@ public class AudioVisu extends Plugin {
 		list.add(".wav");
 		
 		for(String s : list){
-			if(mp.getMedia().getSource().endsWith(s)){
+			if(mp.getMedia().getSource().toLowerCase().endsWith(s)){
 				bandCount = mp.getAudioSpectrumNumBands();
 				minValue = mp.getAudioSpectrumThreshold();
 				mp.setAudioSpectrumListener(listener);
