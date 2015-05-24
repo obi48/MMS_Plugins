@@ -47,7 +47,6 @@ public class AudioVisu extends Plugin {
 	public boolean start() {
 		System.out.println("Visualizer started");
 		
-		pluginHost.addToUIStack(PANE);
 
 		// Register this plugin as listener on ControlPlugin
 		pluginHost.registerPluginListener(this, Identifier.ControlPlugin());
@@ -156,6 +155,8 @@ public class AudioVisu extends Plugin {
 		
 		for(String s : list){
 			if(mp.getMedia().getSource().toLowerCase().endsWith(s)){
+				pluginHost.addToUIStack(PANE);
+				
 				bandCount = mp.getAudioSpectrumNumBands();
 				minValue = mp.getAudioSpectrumThreshold();
 				mp.setAudioSpectrumListener(listener);
