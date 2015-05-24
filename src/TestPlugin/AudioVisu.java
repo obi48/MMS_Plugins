@@ -7,7 +7,6 @@ package TestPlugin;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -38,7 +37,9 @@ public class AudioVisu extends Plugin {
 		super(pluginHost);
 		
 		PANE.setAlignment(Pos.BOTTOM_CENTER);
-		PANE.setTranslateY(-100);
+		PANE.setTranslateY(-120);
+		PANE.setMouseTransparent(true);
+		
 		initListener();
 	}
 
@@ -144,6 +145,7 @@ public class AudioVisu extends Plugin {
 		PANE.getChildren().removeAll(PANE.getChildren());
 		
 		mp = player;
+		mp.audioSpectrumIntervalProperty().setValue(0.03334);
 		
 		List<String> list = new LinkedList<>();
 		
@@ -162,6 +164,7 @@ public class AudioVisu extends Plugin {
 				norms = new double[bars.length];
 				counts = new int[bars.length];
 				init();
+				PANE.setMouseTransparent(true);
 			}
 		}
 	}
@@ -174,7 +177,7 @@ public class AudioVisu extends Plugin {
 
 	@Override
 	public String getDeveloper() {
-		return "MMS";
+		return "AOPP Studios";
 	}
 
 	@Override
