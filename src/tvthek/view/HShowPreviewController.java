@@ -54,19 +54,27 @@ public class HShowPreviewController implements Initializable {
 	}
 	
 	private void updateContent() {
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("HH:mm");
-		DateTimeFormatter durFormat = DateTimeFormatter.ofPattern("mm:ss");
+		DateTimeFormatter hourFormat = DateTimeFormatter.ofPattern("HH:mm");
+		DateTimeFormatter minFormat = DateTimeFormatter.ofPattern("mm:ss");
 		
 		Duration dur = Duration.ofMillis(0);
 		for (Segment seg : show.getSegments()) {
 			dur = dur.plus(seg.getDuration());
 		}
+		
 		final LocalTime time = LocalTime.MIDNIGHT.plus(dur);
+		String durStr;
+		if (dur.compareTo(Duration.ofHours(1)) < 0) {
+			durStr = time.format(minFormat) + " Min.";
+		} else {
+			durStr = time.format(hourFormat) + " Std.";
+		}
+		
 		Platform.runLater(() -> {
-			startTime.setText(show.getBroadcastDate().format(dateFormat));
+			startTime.setText(show.getBroadcastDate().format(hourFormat));
 			previewImgView.setImage(show.getPreview());
 			title.setText(show.getTitle());
-			durationLabel.setText(time.format(durFormat) + " Min.");
+			durationLabel.setText(durStr);
 			description.setText(show.getDescription());
 		});
 	}
