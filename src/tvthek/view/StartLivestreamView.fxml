@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+
+<StackPane fx:id="stackPane" prefWidth="600" prefHeight="400" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tvthek.view.StartLivestreamController" >
+	<BorderPane style="-fx-background-color: #001C61" >
+		<padding>
+			<Insets top="10" right="10" bottom="10" left="10" />
+		</padding>
+		
+		<!-- Top panel showing the station logo and the refresh button -->
+		<top>
+			<AnchorPane>
+				<padding>
+					<Insets top="0" right="0" bottom="20" left="0" />
+				</padding>
+				<ImageView fx:id="stationIcon" fitHeight="25" preserveRatio="true" smooth="true" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"/>
+		
+				<Button fx:id="refreshBtn" text="Refresh" onAction="#handleRefresh" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0"/>	
+			</AnchorPane>
+		</top>
+		
+		<!-- Center panel with live stream information -->
+		<center>
+			<ScrollPane styleClass="edge-to-edge" stylesheets="@../resources/scrollpane.css" >
+				<GridPane fx:id="selectionPane" hgap="10" vgap="10"/>
+			</ScrollPane>
+		</center>
+	</BorderPane>
+	
+	<!-- Overlay with progess indicator -->
+	<FlowPane fx:id="refreshOverlay" style="-fx-background-color: #646464" opacity="0.5" alignment="center" >
+		<ProgressIndicator prefWidth="50" prefHeight="50" />
+	</FlowPane>
+</StackPane>

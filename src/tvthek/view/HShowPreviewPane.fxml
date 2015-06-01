@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+
+<GridPane style="-fx-background-color: #2A3767" vgap="2" hgap="15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tvthek.view.HShowPreviewController" >
+	<padding>
+		<Insets top="10" right="5" bottom="5" left="5" />
+	</padding>
+	
+	<Label fx:id="startTime" style="-fx-text-fill: #A8A8A8; -fx-font-size: 12" alignment="top_left"
+			GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.valignment="top" >
+		<padding>
+			<Insets top="0" right="10" bottom="0" left="10" />
+		</padding>
+	</Label>
+	<StackPane fx:id="previewPane" prefWidth="150" prefHeight="80" alignment="center"
+		GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.columnIndex="1" GridPane.fillHeight="false" GridPane.valignment="top" >
+		<padding>
+			<Insets top="5" right="0" bottom="0" left="0" />
+		</padding>
+		<ImageView fx:id="previewImgView" fitWidth="150" fitHeight="80" preserveRatio="true" smooth="true" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" onMouseClicked="#handleMouseClicked" />
+		<ImageView fx:id="playImgView" fitWidth="50" preserveRatio="true" mouseTransparent="true" />
+	</StackPane>
+	<Label fx:id="title" wrapText="true" prefWidth="300" prefHeight="40" alignment="top_left" style="-fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-font-size: 14"
+			GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.valignment="top" />
+	<Label fx:id="durationLabel" style="-fx-text-fill: #A8A8A8" alignment="top_left"
+			GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.valignment="top" >
+		<padding>
+			<Insets top="0" right="0" bottom="0" left="20" />
+		</padding>
+	</Label>
+	<Label fx:id="description" wrapText="true" prefWidth="450" style="-fx-text-fill: #FFFFFF" 
+			GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+</GridPane>
+

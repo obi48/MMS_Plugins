@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane style="-fx-background-color: transparent" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tvthek.view.LivePreviewController" >
+
+	<top>
+		<ImageView fx:id="channelImgView" fitHeight="16" preserveRatio="true" smooth="true"/>
+	</top>
+
+	<center>
+		<GridPane style="-fx-background-color: #2A3767" vgap="10">
+			<BorderPane.margin>
+				<Insets top="5" right="0" bottom="0" left="0" />
+			</BorderPane.margin>
+			<padding>
+				<Insets top="5" right="5" bottom="5" left="5" />
+			</padding>
+			<Label fx:id="startTime" style="-fx-text-fill: #A8A8A8" 
+					GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="left" />
+			<ImageView fx:id="onAirImgView" fitHeight="10" preserveRatio="true"
+					GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="right" />
+			<Label fx:id="title" wrapText="true" prefWidth="200" prefHeight="60" alignment="top_left" style="-fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-font-size: 14" 
+					GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+			<StackPane fx:id="previewPane" prefWidth="200" prefHeight="100" alignment="center"
+					GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" >
+				<ImageView fx:id="previewImgView" fitWidth="200" fitHeight="100" preserveRatio="true" smooth="true" onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" onMouseClicked="#handleMouseClicked" />
+				<ImageView fx:id="playImgView" fitWidth="50" preserveRatio="true" mouseTransparent="true" />
+			</StackPane>
+			<Label fx:id="description" wrapText="true" prefWidth="200" style="-fx-text-fill: #FFFFFF" 
+					GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+		</GridPane>
+	</center>
+</BorderPane>
+
