@@ -43,9 +43,10 @@ public interface Channel {
 	
 	/**
 	 * Specifies whether downloaded information, like the logo, the live show
-	 * and the list of archived shows, should be cached or retrieved from the
-	 * online source on every call of the corresponding methods.
-	 * If caching is active, the class doesn't take care whether the data are up-to-date.
+	 * and the list of archived shows, should be cached between calls
+	 * of the corresponding methods.
+	 * If caching is active, the class doesn't take care whether the locally
+	 * stored data are up-to-date.
 	 * All locally stored information is deleted when deactivating caching.
 	 * @param useCache
 	 */

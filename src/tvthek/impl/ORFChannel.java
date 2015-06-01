@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import tvthek.TVthekPlugin;
 import javafx.scene.image.Image;
 
 import com.eclipsesource.json.JsonArray;
@@ -156,7 +159,7 @@ class ORFChannel implements Channel {
 				}
 			} catch (DateTimeParseException | UnsupportedOperationException ex) {
 				// Catch all parse exceptions and continue with next entry
-				ex.printStackTrace();
+				Logger.getLogger(TVthekPlugin.class.getName()).log(Level.WARNING, null, ex);
 			}
 		}
 		
@@ -258,7 +261,7 @@ class ORFChannel implements Channel {
 				}
 			} catch (DateTimeParseException | UnsupportedOperationException ex) {
 				// Catch all parse exceptions and continue with next entry
-				ex.printStackTrace();
+				Logger.getLogger(TVthekPlugin.class.getName()).log(Level.WARNING, null, ex);
 			}
 		}
 		
