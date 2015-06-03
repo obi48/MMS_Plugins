@@ -9,7 +9,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import tvthek.TVthekPlugin;
 import javafx.scene.image.Image;
 
 import com.eclipsesource.json.JsonArray;
@@ -153,9 +156,9 @@ public class ORFDecoder implements MediathekDecoder {
 		try (InputStreamReader in = new InputStreamReader(new URL(url).openStream())) {
 			JsonObject obj = JsonObject.readFrom(in);
 			jsonArray = obj.get(KEY_EPISODE_SH_ARRAY).asArray();
-		} catch (IOException | ParseException | UnsupportedOperationException e) {
-			e.printStackTrace();
-			throw new MediathekAccessException("Couldn't access livestream info.\nException: " + e.getMessage() + "");
+		} catch (IOException | ParseException | UnsupportedOperationException ex) {
+			Logger.getLogger(TVthekPlugin.class.getName()).log(Level.SEVERE, null, ex);
+			throw new MediathekAccessException("Couldn't access livestream info.\n(Cause: " + ex.getClass() + "," + ex.getMessage() + ")");
 		}
 
 		if (useCache) {
@@ -184,9 +187,9 @@ public class ORFDecoder implements MediathekDecoder {
 				for (JsonValue val : arr) {
 					jsonArray.add(val);
 				}
-			} catch (IOException | ParseException | UnsupportedOperationException e) {
-				e.printStackTrace();
-				throw new MediathekAccessException("Couldn't access archiv index.\nException: " + e.getMessage() + "");
+			} catch (IOException | ParseException | UnsupportedOperationException ex) {
+				Logger.getLogger(TVthekPlugin.class.getName()).log(Level.SEVERE, null, ex);
+				throw new MediathekAccessException("Couldn't access archiv index.\n(Cause: " + ex.getClass() + "," + ex.getMessage() + ")");
 			}
 		}
 		

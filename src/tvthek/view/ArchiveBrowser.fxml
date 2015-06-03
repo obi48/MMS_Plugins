@@ -35,7 +35,7 @@
 				<HBox fx:id="chSelectPane" spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" />
 				<HBox fx:id="daySelectPane" spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0" />
 				<ScrollPane styleClass="edge-to-edge" stylesheets="@../resources/scrollpane.css"
-					GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" >
+					GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" >
 					<GridPane fx:id="listPane" vgap="10" />
 				</ScrollPane>
 			</GridPane>

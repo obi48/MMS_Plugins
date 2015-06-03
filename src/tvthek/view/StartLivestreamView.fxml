@@ -9,7 +9,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ProgressIndicator?>
 
-<StackPane fx:id="stackPane" prefWidth="600" prefHeight="400" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tvthek.view.StartLivestreamController" >
+<StackPane fx:id="stackPane" prefWidth="750" prefHeight="400" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tvthek.view.StartLivestreamController" >
 	<BorderPane style="-fx-background-color: #001C61" >
 		<padding>
 			<Insets top="10" right="10" bottom="10" left="10" />

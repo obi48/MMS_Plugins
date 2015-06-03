@@ -91,6 +91,7 @@ class ORFChannel implements Channel {
 		
 		Image img = new Image(iconURL, false);
 		if (img.isError()) {
+			Logger.getLogger(TVthekPlugin.class.getName()).log(Level.WARNING, "Error while loading channel logo.");
 			throw new MediathekAccessException("Couldn't load channel logo.");
 		}
 		if (useCache) {
@@ -227,9 +228,9 @@ class ORFChannel implements Channel {
 					String url = jsonObj.get(KEY_DETAIL_URL).asString();
 					try (InputStreamReader in = new InputStreamReader(new URL(url).openStream())) {
 						details = JsonObject.readFrom(in).get(KEY_EPISODE_DET_ARRAY).asObject();
-					} catch (IOException | ParseException | UnsupportedOperationException e) {
-						e.printStackTrace();
-						throw new MediathekAccessException("Couldn't access episode details.\nException: " + e.getMessage() + "");
+					} catch (IOException | ParseException | UnsupportedOperationException ex) {
+						Logger.getLogger(TVthekPlugin.class.getName()).log(Level.SEVERE, null, ex);
+						throw new MediathekAccessException("Couldn't access episode details.\n(Cause: " + ex.getClass() + "," + ex.getMessage() + ")");
 					}
 					JsonArray segArr = details.get(KEY_SEGMENT_ARRAY).asArray();
 					for (JsonValue seg : segArr) {

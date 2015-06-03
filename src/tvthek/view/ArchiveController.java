@@ -197,7 +197,7 @@ public class ArchiveController {
 						Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("TVthek Decoder");
 						alert.setHeaderText("Error");
-						alert.setContentText(ex.getMessage());
+						alert.setContentText(ex.getClass() + "\n" + ex.getMessage());
 						alert.showAndWait();
 						Stage stage = (Stage) stationIcon.getScene().getWindow();
 						stage.close();
