@@ -8,10 +8,14 @@ package TestPlugin;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.effect.Reflection;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.MediaPlayer;
 import mms.Pluginsystem.Plugin;
@@ -39,6 +43,21 @@ public class AudioVisu extends Plugin {
 		PANE.setAlignment(Pos.BOTTOM_CENTER);
 		PANE.setTranslateY(-120);
 		PANE.setMouseTransparent(true);
+		pluginHost.addToUIStack(PANE);
+
+		ColumnConstraints col = new ColumnConstraints();
+		col.setPercentWidth(10);
+		RowConstraints row = new RowConstraints();
+		row.setPercentHeight(75);
+		
+		PANE.getRowConstraints().add(row);
+		PANE.getColumnConstraints().add(col);
+		PANE.getColumnConstraints().add(col);
+		PANE.getColumnConstraints().add(col);
+		PANE.getColumnConstraints().add(col);
+		PANE.getColumnConstraints().add(col);
+		PANE.getColumnConstraints().add(col);
+		PANE.getColumnConstraints().add(col);
 		
 		initListener();
 	}
@@ -95,11 +114,12 @@ public class AudioVisu extends Plugin {
 	}
 
 	private void initBars() {
-		Reflection reflection = new Reflection();
-		reflection.setFraction(0.32);
+		Reflection reflection;
 
 		for (int i = 0; i < bars.length; i++) {
 			bars[i] = new SpectrumBar(100, 40);
+			reflection = new Reflection();
+			reflection.setFraction(0.32);
 			bars[i].setEffect(reflection);
 			
 			GridPane.setHalignment(bars[i], HPos.CENTER);
@@ -144,7 +164,7 @@ public class AudioVisu extends Plugin {
 		PANE.getChildren().removeAll(PANE.getChildren());
 		
 		mp = player;
-		mp.audioSpectrumIntervalProperty().setValue(0.03334);
+		mp.audioSpectrumIntervalProperty().setValue(1/60.);
 		
 		List<String> list = new LinkedList<>();
 		
@@ -155,12 +175,10 @@ public class AudioVisu extends Plugin {
 		
 		for(String s : list){
 			if(mp.getMedia().getSource().toLowerCase().endsWith(s)){
-				pluginHost.addToUIStack(PANE);
 				
 				bandCount = mp.getAudioSpectrumNumBands();
 				minValue = mp.getAudioSpectrumThreshold();
 				mp.setAudioSpectrumListener(listener);
-				System.out.println(bandCount);
 				bars = new SpectrumBar[7];
 				norms = new double[bars.length];
 				counts = new int[bars.length];

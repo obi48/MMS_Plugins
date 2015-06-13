@@ -23,7 +23,10 @@ public class SpectrumBar extends VBox {
 		setSpacing(1.0);
 		setAlignment(Pos.BOTTOM_CENTER);
 		setStyle("-fx-background-color: black; -fx-padding: 2;");
+		setMinHeight(barCount*2);
+		setMinWidth(1);
 
+		
 		Stop[] stop = new Stop[5];
 		stop[0] = new Stop(0.2, Color.RED);
 		stop[1] = new Stop(0.4, Color.ORANGE);
@@ -34,8 +37,14 @@ public class SpectrumBar extends VBox {
 		//init rectangles
 		for (int i = 0; i < barCount; i++) {
 			int color = (int) ((double) i / (double) barCount * 255.0);
-			Rectangle rectangle = new Rectangle(20,5);
-			rectangle.setVisible(false);
+			Rectangle rectangle = new Rectangle();
+			rectangle.setVisible(true);
+			rectangle.setOpacity(0.5);
+			
+			//set scale
+			rectangle.heightProperty().bind(heightProperty().subtract(40*2).divide(40));
+			rectangle.widthProperty().bind(widthProperty().subtract(4));
+			
 			rectangle.setFill(Utils.ladder(Color.rgb(color, color, color), stop));
 			getChildren().add(rectangle);
 		}
@@ -44,8 +53,12 @@ public class SpectrumBar extends VBox {
 	public void setValue(double value) {
 		int maxVisible = Math.min(barCount, (int) Math.round(value / maxValue * barCount));
 		ObservableList<Node> bars = getChildren();
+		
 		for (int i = 0; i < bars.size(); i++) {
-			bars.get(i).setVisible(i > barCount - maxVisible);
+			if(i > barCount - maxVisible){
+				bars.get(i).setOpacity(1);
+			}
+			bars.get(i).setOpacity(bars.get(i).getOpacity()-0.1);
 		}
 	}
 }
