@@ -167,7 +167,7 @@ public class AudioVisu extends Plugin {
 		mp.audioSpectrumIntervalProperty().setValue(1/60.);
 		
 		for(String s : PluginHost.getSupportedAudioFormats()){
-			if(mp.getMedia().getSource().toLowerCase().endsWith(s)){
+			if(mp.getMedia().getSource().toLowerCase().endsWith(s.substring(1))){
 				
 				bandCount = mp.getAudioSpectrumNumBands();
 				minValue = mp.getAudioSpectrumThreshold();
