@@ -64,7 +64,7 @@ public class AudioVisu extends Plugin {
 
 	@Override
 	public boolean start() {
-		System.out.println("Visualizer started");
+		System.out.println(getName()+" started");
 		
 
 		// Register this plugin as listener on ControlPlugin
@@ -166,14 +166,7 @@ public class AudioVisu extends Plugin {
 		mp = player;
 		mp.audioSpectrumIntervalProperty().setValue(1/60.);
 		
-		List<String> list = new LinkedList<>();
-		
-		list.add(".mp3");
-		list.add(".aif");
-		list.add(".aiff");
-		list.add(".wav");
-		
-		for(String s : list){
+		for(String s : PluginHost.getSupportedAudioFormats()){
 			if(mp.getMedia().getSource().toLowerCase().endsWith(s)){
 				
 				bandCount = mp.getAudioSpectrumNumBands();
@@ -190,7 +183,7 @@ public class AudioVisu extends Plugin {
 
 	@Override
 	public boolean stop() {
-		System.out.println("Plugin stopped");
+		System.out.println(getName()+" stopped");
 		return true;
 	}
 
