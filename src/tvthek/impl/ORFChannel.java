@@ -24,6 +24,11 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
 
+/**
+ * Implementation of a {@link Channel} capable of decoding information
+ * from the OFF TVthek.
+ * @author Thomas Paireder
+ */
 class ORFChannel implements Channel {
 	private static final String DATE_TOKEN_FORMAT = "dd.MM.yyyy HH:mm:ss";
 	// Keys for accessing Json entries
@@ -158,7 +163,7 @@ class ORFChannel implements Channel {
 					duration = Duration.between(startDate, endDate).abs();
 					break;
 				}
-			} catch (DateTimeParseException | UnsupportedOperationException ex) {
+			} catch (DateTimeParseException | UnsupportedOperationException | IndexOutOfBoundsException ex) {
 				// Catch all parse exceptions and continue with next entry
 				Logger.getLogger(TVthekPlugin.class.getName()).log(Level.WARNING, null, ex);
 			}
@@ -260,7 +265,7 @@ class ORFChannel implements Channel {
 					Show show = new ORFShow(title, img, description, startDate, segments);
 					shows.add(show);
 				}
-			} catch (DateTimeParseException | UnsupportedOperationException ex) {
+			} catch (DateTimeParseException | UnsupportedOperationException | IndexOutOfBoundsException ex) {
 				// Catch all parse exceptions and continue with next entry
 				Logger.getLogger(TVthekPlugin.class.getName()).log(Level.WARNING, null, ex);
 			}

@@ -3,6 +3,8 @@ package tvthek;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,29 +12,37 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import mms.Pluginsystem.Plugin;
 import mms.Pluginsystem.PluginHost;
+import mms.Pluginsystem.PluginHost.Identifier;
 import tvthek.impl.MediathekDecoder;
 import tvthek.impl.ORFDecoder;
+import tvthek.impl.Segment;
 import tvthek.impl.Show;
 import tvthek.view.ArchiveController;
 import tvthek.view.StartLivestreamController;
 
 /**
- * 
+ * Mediaplayer plugin capable of accessing the online services of the ORF.
  * @author Thomas Paireder
  */
 public class TVthekPlugin extends Plugin {
+	private static final String PLAYLIST_PLUGIN_ID = "AOPP Studios,PlaylistPlugin,1.0";
+	private static final String MESSAGE_ID = "addTempPlaylist";
+	
 	private static final String MENU_NAME = "ORF TVthek";
 	private static final String M_ITEM_LIVE = "Start livestream...";
 	private static final String M_ITEM_ARCHIVE = "Previous shows...";
@@ -81,8 +91,8 @@ public class TVthekPlugin extends Plugin {
 
 	@Override
 	public boolean stop() {
-		// TODO Auto-generated method stub
-		return false;
+		// Nothing todo
+		return true;
 	}
 
 	@Override
@@ -97,7 +107,7 @@ public class TVthekPlugin extends Plugin {
 
 	@Override
 	public String getVersion() {
-		return "0.2";
+		return "1.0";
 	}
 
 	@Override
@@ -181,16 +191,27 @@ public class TVthekPlugin extends Plugin {
 			//dialogStage.setResizable(false);
 			dialogStage.showAndWait();
 
-			Show s = controller.getShow();
-			if (s != null) {
-				System.out.println(s.getSegments().get(0).getStreamURL());
-				pluginHost.setMedia(new URI(s.getSegments().get(0).getStreamURL()));
+			Show show = controller.getShow();
+			if (show != null && show.getSegments().size() >= 1) {
+				List<Media> mediaList = new ArrayList<>();
+				List<String> titleList = new ArrayList<>();
+				for (Segment s : show.getSegments()) {
+					Media m = new Media(s.getStreamURL());
+					mediaList.add(m);
+					titleList.add(s.getTitle());
+				}
+				boolean success = pluginHost.fireMessageDirectlyToPlugin(Identifier.Plugin(PLAYLIST_PLUGIN_ID), MESSAGE_ID, show.getTitle(), mediaList, titleList);
+				if (!success) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("TVthek Decoder");
+					alert.setHeaderText("Error");
+					alert.setContentText("Couldn't add show to playlist.");
+					alert.showAndWait();
+				}
 			}
 
 		} catch (IOException ex) {
 			// Exception gets thrown if the fxml file could not be loaded
-			Logger.getLogger(TVthekPlugin.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (URISyntaxException ex) {
 			Logger.getLogger(TVthekPlugin.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}

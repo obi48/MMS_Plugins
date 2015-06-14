@@ -34,6 +34,11 @@ import tvthek.impl.Channel;
 import tvthek.impl.MediathekDecoder;
 import tvthek.impl.Show;
 
+/**
+ * GUI controller for the ArchiveBrowser view.
+ * Sets up the content and handles user interactions.
+ * @author Thomas Paireder
+ */
 public class ArchiveController {
 	@FXML
 	private StackPane stackPane;

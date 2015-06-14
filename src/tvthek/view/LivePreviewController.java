@@ -14,6 +14,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Controller for a LivePreviewPane.
+ * @author Thomas Paireder
+ */
 public class LivePreviewController implements Initializable {
 	@FXML
 	private ImageView channelImgView;

@@ -6,6 +6,10 @@ import java.util.List;
 
 import javafx.scene.image.Image;
 
+/**
+ * Implementation of a {@link Show}.
+ * @author Thomas Paireder
+ */
 class ORFShow implements Show {
 	private final String title;
 	private final Image preview;

@@ -20,6 +20,11 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
 
+/**
+ * Implementation of a {@link MediathekDecoder} capable of decoding information
+ * from the ORF TVthek.
+ * @author Thomas Paireder
+ */
 public class ORFDecoder implements MediathekDecoder {
 	private static final Duration CACHE_TIMEOUT = Duration.ofMinutes(10);
 	

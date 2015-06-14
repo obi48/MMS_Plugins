@@ -2,6 +2,10 @@ package tvthek.impl;
 
 import java.time.Duration;
 
+/**
+ * Implementation of a show {@link Segment}.
+ * @author Thomas Paireder
+ */
 public class ORFShowSegment implements Segment {
 	private final String title;
 	private final String desc;

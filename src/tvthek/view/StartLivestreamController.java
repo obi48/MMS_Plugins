@@ -22,6 +22,11 @@ import tvthek.TVthekPlugin;
 import tvthek.impl.Channel;
 import tvthek.impl.MediathekDecoder;
 
+/**
+ * GUI controller for the StartLivestreamView.
+ * Sets up the content and handles user interactions.
+ * @author Thomas Paireder
+ */
 public class StartLivestreamController {
 	@FXML
 	private StackPane stackPane;

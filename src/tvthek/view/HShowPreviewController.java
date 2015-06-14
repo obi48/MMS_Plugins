@@ -15,7 +15,10 @@ import javafx.scene.layout.StackPane;
 import tvthek.impl.Segment;
 import tvthek.impl.Show;
 
-
+/**
+ * Controller for a HShowPreviewPane.
+ * @author Thomas Paireder
+ */
 public class HShowPreviewController implements Initializable {
 	@FXML
 	private StackPane previewPane;

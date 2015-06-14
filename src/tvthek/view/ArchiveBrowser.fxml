@@ -43,8 +43,12 @@
 	</BorderPane>
 	
 	<!-- Overlay with progess indicator -->
-	<FlowPane fx:id="refreshOverlay" style="-fx-background-color: #646464" opacity="0.5" alignment="center" >
-		<ProgressIndicator prefWidth="50" prefHeight="50" />
+	<FlowPane fx:id="refreshOverlay" style="-fx-background-color: rgba(100,100,100,0.5)" alignment="center" >
+		<VBox style="-fx-background-color: transparent" alignment="center" >
+			<ProgressIndicator prefWidth="50" prefHeight="50" />
+			<Label text="" />
+			<Label text="Downloading the archiv information may take several minutes." style="-fx-text-fill: white" />
+		</VBox>
 	</FlowPane>
 </StackPane>
 
