@@ -20,10 +20,8 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observer;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +43,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
@@ -61,7 +58,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
-import javax.swing.ImageIcon;
 
 public class PlaylistPlugin extends Plugin {
 
@@ -82,35 +78,32 @@ public class PlaylistPlugin extends Plugin {
     private List<MediaPlayer> inithelper;
 
     //handles clicks on Tracks
-    private final EventHandler<MouseEvent> TrackClick = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            if (event.getButton() == MouseButton.PRIMARY) {
-                int selected = controller.getCurrentPlaylistLV().getSelectionModel().getSelectedIndex();
-                if (selected != curTrack || curPlaylist != displayedPL || !curplaying) {
-                    if (selected >= 0 && selected < Playlists.get(displayedPL).size()) {
-                        curTrack = selected;
-                        try {
-                            curplaying = true;
-                            finished = true;
-                            if (prevBtn != null && nextBtn != null) {
-                                if (Playlists.get(displayedPL).size() > 1) {
-                                    prevBtn.setDisable(false);
-                                    nextBtn.setDisable(false);
-                                } else {
-                                    prevBtn.setDisable(true);
-                                    nextBtn.setDisable(true);
-                                }
+    private final EventHandler<MouseEvent> TrackClick = (MouseEvent event) -> {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            int selected = controller.getCurrentPlaylistLV().getSelectionModel().getSelectedIndex();
+            if (selected != curTrack || curPlaylist != displayedPL || !curplaying) {
+                if (selected >= 0 && selected < Playlists.get(displayedPL).size()) {
+                    curTrack = selected;
+                    try {
+                        curplaying = true;
+                        finished = true;
+                        if (prevBtn != null && nextBtn != null) {
+                            if (Playlists.get(displayedPL).size() > 1) {
+                                prevBtn.setDisable(false);
+                                nextBtn.setDisable(false);
+                            } else {
+                                prevBtn.setDisable(true);
+                                nextBtn.setDisable(true);
                             }
-
-                            pluginHost.setMedia(new URI(Playlists.get(displayedPL).get(curTrack).getSource()));
-                        } catch (URISyntaxException ex) {
-                            Logger.getLogger(PlaylistPlugin.class.getName()).log(Level.SEVERE, null, ex);
                         }
+
+                        pluginHost.setMedia(new URI(Playlists.get(displayedPL).get(curTrack).getSource()));
+                    } catch (URISyntaxException ex) {
+                        Logger.getLogger(PlaylistPlugin.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                curPlaylist = displayedPL;
             }
+            curPlaylist = displayedPL;
         }
     };
 
@@ -155,13 +148,10 @@ public class PlaylistPlugin extends Plugin {
         //Deserialize saved Playlists
         LinkedList<String> TNames;
         LinkedList<LinkedList<String>> TPlaylists;
-        try {
-            FileInputStream fileIn = new FileInputStream("Playlist.dat");
-            ObjectInputStream in = new ObjectInputStream(fileIn);
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("Playlist.dat"))) {
             TNames = (LinkedList<String>) in.readObject();
             TPlaylists = (LinkedList<LinkedList<String>>) in.readObject();
-            in.close();
-            fileIn.close();
+
             if (TNames != null && TPlaylists != null) {
                 PlaylistNames.addAll(TNames);
                 for (int i = 0; i < TPlaylists.size(); i++) {
@@ -170,7 +160,7 @@ public class PlaylistPlugin extends Plugin {
                         try {
                             Media m = new Media(s);
                             MediaPlayer mediaPlayer = new MediaPlayer(m);
-                            mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(i), m,mediaPlayer));
+                            mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(i), m, mediaPlayer));
                         } catch (MediaException e) {
 
                         }
@@ -192,97 +182,77 @@ public class PlaylistPlugin extends Plugin {
 
         //user selected a playlist
         //change listener on selection model doesnt work
-        controller.getPlaylistsLV().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                int selected = controller.getPlaylistsLV().getSelectionModel().getSelectedIndex();
-                selecPlaylist(selected);
-            }
+        controller.getPlaylistsLV().setOnMouseClicked((MouseEvent event) -> {
+            int selected = controller.getPlaylistsLV().getSelectionModel().getSelectedIndex();
+            selecPlaylist(selected);
         });
 
-        controller.getPlaylistsLV().setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                setControlHideEffects(false);
-                if (db.hasFiles()) {
-                    event.acceptTransferModes(TransferMode.LINK);
-                } else {
-                    event.consume();
-                }
+        controller.getPlaylistsLV().setOnDragOver((DragEvent event) -> {
+            Dragboard db = event.getDragboard();
+            setControlHideEffects(false);
+            if (db.hasFiles()) {
+                event.acceptTransferModes(TransferMode.LINK);
+            } else {
+                event.consume();
             }
         });
 
         //add Files as new playlist
-        controller.getPlaylistsLV().setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Optional<String> result = showPlaylistNameDialog();
-                result.ifPresent(name -> {
-                    if (!name.isEmpty()) {
-                        PlaylistNames.add(name);
-                        Playlists.add(FXCollections.observableArrayList());
-                        controller.getPlaylistsLV().getSelectionModel().select(PlaylistNames.size() - 1);
-                        selecPlaylist(PlaylistNames.size() - 1);
-                    }
-                });
-
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasFiles()) {
-                    success = true;
-                    String filePath = null;
-
-                    for (File file : db.getFiles()) {
-                        filePath = file.toURI().toString();
-                        Media m = new Media(filePath);
-                        MediaPlayer mediaPlayer = new MediaPlayer(m);
-                        mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(displayedPL), m,mediaPlayer));
-                    }
+        controller.getPlaylistsLV().setOnDragDropped((DragEvent event) -> {
+            Optional<String> result = showPlaylistNameDialog();
+            result.ifPresent(name -> {
+                if (!name.isEmpty()) {
+                    PlaylistNames.add(name);
+                    Playlists.add(FXCollections.observableArrayList());
+                    controller.getPlaylistsLV().getSelectionModel().select(PlaylistNames.size() - 1);
+                    selecPlaylist(PlaylistNames.size() - 1);
                 }
-                event.setDropCompleted(success);
-                event.consume();
+            });
+
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                success = true;
+                String filePath;
+
+                for (File file : db.getFiles()) {
+                    filePath = file.toURI().toString();
+                    Media m = new Media(filePath);
+                    MediaPlayer mediaPlayer = new MediaPlayer(m);
+                    mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(displayedPL), m, mediaPlayer));
+                }
             }
-        }
-        );
+            event.setDropCompleted(success);
+            event.consume();
+        });
 
         //dragevents for current playlist
         controller.getCurrenPlaylistTP()
-                .setOnDragOver(new EventHandler<DragEvent>() {
-                    @Override
-                    public void handle(DragEvent event
-                    ) {
-                        setControlHideEffects(false);
-                        Dragboard db = event.getDragboard();
-                        if (db.hasFiles()) {
-                            event.acceptTransferModes(TransferMode.LINK);
-                        } else {
-                            event.consume();
-                        }
-                    }
-                }
-                );
-
-        controller.getCurrenPlaylistTP()
-                .setOnDragDropped(new EventHandler<DragEvent>() {
-                    @Override
-                    public void handle(DragEvent event
-                    ) {
-                        Dragboard db = event.getDragboard();
-                        boolean success = false;
-                        if (db.hasFiles()) {
-                            success = true;
-                            for (File file : db.getFiles()) {
-                                Media m = new Media(file.toURI().toString());
-                                MediaPlayer mediaPlayer = new MediaPlayer(m);
-                                mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(displayedPL), m,mediaPlayer));
-                            }
-                        }
-                        event.setDropCompleted(success);
+                .setOnDragOver((DragEvent event) -> {
+                    setControlHideEffects(false);
+                    Dragboard db = event.getDragboard();
+                    if (db.hasFiles()) {
+                        event.acceptTransferModes(TransferMode.LINK);
+                    } else {
                         event.consume();
                     }
-                }
-                );
+                });
+
+        controller.getCurrenPlaylistTP()
+                .setOnDragDropped((DragEvent event) -> {
+                    Dragboard db = event.getDragboard();
+                    boolean success = false;
+                    if (db.hasFiles()) {
+                        success = true;
+                        for (File file : db.getFiles()) {
+                            Media m = new Media(file.toURI().toString());
+                            MediaPlayer mediaPlayer = new MediaPlayer(m);
+                            mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(displayedPL), m, mediaPlayer));
+                        }
+                    }
+                    event.setDropCompleted(success);
+                    event.consume();
+                });
 
         // User clicked on a track
         controller.getCurrentPlaylistLV()
@@ -317,7 +287,7 @@ public class PlaylistPlugin extends Plugin {
                     try {
                         Media m = new Media(result.get());
                         MediaPlayer mediaPlayer = new MediaPlayer(m);
-                        mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(displayedPL), m,mediaPlayer));
+                        mediaPlayer.setOnReady(new MediaInitializer(Playlists.get(displayedPL), m, mediaPlayer));
                     } catch (Exception e) {
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Warning");
@@ -325,7 +295,7 @@ public class PlaylistPlugin extends Plugin {
                         alert.setContentText("The URL can't be added to the Playlist.");
 
                         alert.showAndWait();
-                    };
+                    }
                 }
             }
         });
@@ -479,13 +449,13 @@ public class PlaylistPlugin extends Plugin {
 
     @Override
     public void onEventReceived(String eventID, Object... args) {
-        if (eventID.equals("CycleChanged")) {
-            looping = (boolean) args[0];
-        } else if (eventID.equals("PrevButton")) {
-            prevBtn = (Button) args[0];
-            prevBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
+        switch (eventID) {
+            case "CycleChanged":
+                looping = (boolean) args[0];
+                break;
+            case "PrevButton":
+                prevBtn = (Button) args[0];
+                prevBtn.setOnMouseClicked((MouseEvent event) -> {
                     if (event.getButton() == MouseButton.PRIMARY) {
                         curTrack--;
                         if (curTrack < 0) {
@@ -500,14 +470,11 @@ public class PlaylistPlugin extends Plugin {
                             Logger.getLogger(PlaylistPlugin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                }
-            });
-
-        } else if (eventID.equals("NextButton")) {
-            nextBtn = (Button) args[0];
-            nextBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
+                });
+                break;
+            case "NextButton":
+                nextBtn = (Button) args[0];
+                nextBtn.setOnMouseClicked((MouseEvent event) -> {
                     if (event.getButton() == MouseButton.PRIMARY) {
                         curTrack++;
                         if (curTrack >= Playlists.get(curPlaylist).size()) {
@@ -522,51 +489,46 @@ public class PlaylistPlugin extends Plugin {
                             Logger.getLogger(PlaylistPlugin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                });
+                break;
+            case "addTempPlaylist":
+                String Name = (String) args[0];
+                List<String> titles = (List<String>) args[2];
+                this.Titles = titles;
+                List<Media> clips = (List<Media>) args[1];
+                PlaylistNames.add(Name);
+                ObservableList<Media> mlist = FXCollections.observableArrayList();
+                if (tempPL != null) {
+                    int i = PlaylistNames.indexOf(tempPL);
+                    PlaylistNames.remove(i);
+                    Playlists.remove(i);
                 }
-            });
-        } else if (eventID.equals("addTempPlaylist")) {
-            String Name = (String) args[0];
-            List<String> Titles = (List<String>) args[2];
-            this.Titles = Titles;
-            
-            List<Media> clips = (List<Media>) args[1];
-            PlaylistNames.add(Name);
-            ObservableList<Media> mlist = FXCollections.observableArrayList();
-            
-
-            if (tempPL != null) {
-                int i = PlaylistNames.indexOf(tempPL);
-                PlaylistNames.remove(i);
-                Playlists.remove(i);
-            }
-
-            tempPL = Name;
-
-            for (Media m : clips) {
-                mlist.add(m);
-            }
-            Playlists.add(mlist);
-            selecPlaylist(PlaylistNames.indexOf(Name));
-            controller.getPlaylistsLV().getSelectionModel().select(PlaylistNames.indexOf(Name));
-            curTrack = 0;
-            try {
-                curplaying = true;
-                finished = true;
-                if (prevBtn != null && nextBtn != null) {
-                    if (Playlists.get(displayedPL).size() > 1) {
-                        prevBtn.setDisable(false);
-                        nextBtn.setDisable(false);
-                    } else {
-                        prevBtn.setDisable(true);
-                        nextBtn.setDisable(true);
+                tempPL = Name;
+                for (Media m : clips) {
+                    mlist.add(m);
+                }
+                Playlists.add(mlist);
+                selecPlaylist(PlaylistNames.indexOf(Name));
+                controller.getPlaylistsLV().getSelectionModel().select(PlaylistNames.indexOf(Name));
+                curTrack = 0;
+                try {
+                    curplaying = true;
+                    finished = true;
+                    if (prevBtn != null && nextBtn != null) {
+                        if (Playlists.get(displayedPL).size() > 1) {
+                            prevBtn.setDisable(false);
+                            nextBtn.setDisable(false);
+                        } else {
+                            prevBtn.setDisable(true);
+                            nextBtn.setDisable(true);
+                        }
                     }
+
+                    pluginHost.setMedia(new URI(Playlists.get(displayedPL).get(curTrack).getSource()));
+                } catch (URISyntaxException ex) {
+                    Logger.getLogger(PlaylistPlugin.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                pluginHost.setMedia(new URI(Playlists.get(displayedPL).get(curTrack).getSource()));
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(PlaylistPlugin.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+                break;
         }
     }
 
@@ -604,11 +566,12 @@ public class PlaylistPlugin extends Plugin {
                 if (item.getMetadata().containsKey("title")) {
                     CellController.getTitle().setText((String) item.getMetadata().get("title"));
                 } else {
-                    if(displayedPL == PlaylistNames.indexOf(tempPL)){
+                    if (displayedPL == PlaylistNames.indexOf(tempPL)) {
                         CellController.getTitle().setText(Titles.get(this.getIndex()));
-                    }else{
-                    CellController.getTitle().setText(item.getSource().substring(item.getSource().lastIndexOf('/') + 1));
-                }}
+                    } else {
+                        CellController.getTitle().setText(item.getSource().substring(item.getSource().lastIndexOf('/') + 1));
+                    }
+                }
 
                 if (item.getMetadata().containsKey("artist")) {
                     CellController.getArtist().setText((String) item.getMetadata().get("artist"));
@@ -666,7 +629,7 @@ public class PlaylistPlugin extends Plugin {
                         controller.getCurrentPlaylistLV().setItems(null);
                     }
 
-                    if (item == tempPL) {
+                    if (item.equals(tempPL)) {
                         tempPL = null;
                     }
                 });
@@ -717,18 +680,12 @@ public class PlaylistPlugin extends Plugin {
             }
         }
 
-        try {
-            FileOutputStream fileOut
-                    = new FileOutputStream("Playlist.dat");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Playlist.dat"))) {
             out.writeObject(TNames);
             out.writeObject(TPlaylists);
-            out.close();
-            fileOut.close();
         } catch (IOException i) {
             i.printStackTrace();
         }
-
         return true;
     }
 
