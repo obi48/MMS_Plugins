@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import mms.Pluginsystem.Plugin;
-import mms.Pluginsystem.PluginHost;
+import mms.Pluginsystem.PluginHost; 
 import mms.Pluginsystem.PluginHost.Identifier;
 import tvthek.impl.MediathekDecoder;
 import tvthek.impl.ORFDecoder;
